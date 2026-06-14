@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./back
+    container_name: ds-recommender-back
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./front
+    container_name: ds-recommender-front
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://backend:8000
+    depends_on:
+      - backend
