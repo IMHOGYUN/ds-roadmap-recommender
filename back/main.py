@@ -5,7 +5,7 @@ from recommender import recommend
 
 app = FastAPI(
     title="Workout Routine Recommendation API",
-    description="여름방학 맞춤 운동 루틴을 추천하는 FastAPI 백엔드입니다.",
+    description="추천 모드와 사용자 입력값을 바탕으로 여름방학 맞춤 운동 루틴을 추천하는 FastAPI 백엔드입니다.",
 )
 
 app.add_middleware(

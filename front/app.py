@@ -24,6 +24,11 @@ with st.sidebar:
 
 st.divider()
 
+recommendation_mode = st.selectbox(
+    "추천 기능을 선택하세요",
+    ["처음 시작 루틴 추천", "오늘 운동 부위 추천", "주간 분할 루틴 추천", "목적별 집중 루틴 추천", "회복/스트레칭 루틴 추천"],
+)
+
 fitness_goal = st.selectbox(
     "운동 목적을 선택하세요",
     ["체력 향상", "근비대", "체지방 감량", "근력 향상", "자세 교정/건강 관리"],
@@ -52,7 +57,7 @@ yesterday_workout = st.selectbox(
 
 available_time = st.radio(
     "1회 운동 가능 시간을 선택하세요",
-    ["30분 이하", "30~60분", "60~90분", "90분 이상"],
+    ["30분 이하", "30-60분", "60-90분", "90분 이상"],
     horizontal=True,
 )
 
@@ -65,6 +70,7 @@ st.divider()
 
 if st.button("운동 루틴 추천 받기", type="primary"):
     payload = {
+        "recommendation_mode": recommendation_mode,
         "fitness_goal": fitness_goal,
         "experience_level": experience_level,
         "days_per_week": days_per_week,
@@ -99,9 +105,9 @@ if st.button("운동 루틴 추천 받기", type="primary"):
             for exercise in result["recommended_exercises"]:
                 with st.container(border=True):
                     st.subheader(exercise["name"])
-                    st.write(f"세트: {exercise['sets']}")
-                    st.write(f"반복: {exercise['reps']}")
-                    st.write(f"휴식: {exercise['rest']}")
+                    st.write("세트:", exercise["sets"])
+                    st.write("반복:", exercise["reps"])
+                    st.write("휴식:", exercise["rest"])
                     st.caption(exercise["description"])
 
             st.subheader("주간 운동 계획")
