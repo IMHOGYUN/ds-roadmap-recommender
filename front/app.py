@@ -24,7 +24,7 @@ st.divider()
 
 interest = st.selectbox(
     "관심 분야를 선택하세요",
-    ["데이터분석", "AI", "백엔드", "클라우드", "프론트엔드"],
+    ["데이터분석", "AI", "백엔드", "클라우드", "웹개발"],
 )
 
 grade = st.selectbox(
