@@ -10,8 +10,6 @@ class RecommendRequest(BaseModel):
     days_per_week: str
     workout_place: str
     yesterday_workout: str
-    available_time: str
-    preference: str
 
 
 class Exercise(BaseModel):
@@ -29,7 +27,7 @@ class DebugInfo(BaseModel):
     place_rule: str
     goal_rule: str
     level_rule: str
-    time_rule: str
+    days_rule: str
 
 
 class RecommendResponse(BaseModel):

@@ -31,7 +31,7 @@ recommendation_mode = st.selectbox(
 
 fitness_goal = st.selectbox(
     "운동 목적을 선택하세요",
-    ["체력 향상", "근비대", "체지방 감량", "근력 향상", "자세 교정/건강 관리"],
+    ["근비대 및 근력 향상", "체지방 감량"],
 )
 
 experience_level = st.radio(
@@ -55,17 +55,6 @@ yesterday_workout = st.selectbox(
     ["운동 안 함", "가슴", "등", "하체", "어깨", "팔", "전신", "유산소"],
 )
 
-available_time = st.radio(
-    "1회 운동 가능 시간을 선택하세요",
-    ["30분 이하", "30-60분", "60-90분", "90분 이상"],
-    horizontal=True,
-)
-
-preference = st.selectbox(
-    "선호 운동 방식을 선택하세요",
-    ["기초부터 천천히", "짧고 효율적으로", "강도 높게", "체계적인 분할 루틴", "유산소와 근력 병행"],
-)
-
 st.divider()
 
 if st.button("운동 루틴 추천 받기", type="primary"):
@@ -76,8 +65,6 @@ if st.button("운동 루틴 추천 받기", type="primary"):
         "days_per_week": days_per_week,
         "workout_place": workout_place,
         "yesterday_workout": yesterday_workout,
-        "available_time": available_time,
-        "preference": preference,
     }
 
     try:

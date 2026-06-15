@@ -1,6 +1,6 @@
 # 여름방학 맞춤 운동 루틴 추천 앱
 
-Streamlit 프론트엔드와 FastAPI 백엔드를 Docker Compose로 연결한 운동 루틴 추천 웹 애플리케이션입니다. 사용자가 추천 기능, 운동 목적, 경험 수준, 주당 운동 가능 횟수, 운동 장소, 어제 운동한 부위, 운동 가능 시간, 선호 운동 방식을 입력하면 FastAPI가 규칙 기반으로 오늘의 운동 루틴과 주간 계획을 JSON으로 반환하고 Streamlit이 화면에 표시합니다.
+Streamlit 프론트엔드와 FastAPI 백엔드를 Docker Compose로 연결한 운동 루틴 추천 웹 애플리케이션입니다. 사용자가 추천 기능, 운동 목적, 경험 수준, 주당 운동 가능 횟수, 운동 장소, 어제 운동한 부위를 입력하면 FastAPI가 규칙 기반으로 오늘의 운동 루틴과 주간 계획을 JSON으로 반환하고 Streamlit이 화면에 표시합니다.
 
 이 앱은 일반적인 운동 루틴 추천을 제공하는 학습용 웹앱이며, 의학적 진단이나 치료 목적이 아닙니다. 통증, 질환, 부상 이력이 있는 경우 전문가와 상담해야 합니다.
 
@@ -25,13 +25,11 @@ Streamlit은 추천을 직접 계산하지 않고 `/recommend` API에 요청을 
 ## 입력값
 
 - `recommendation_mode`: 처음 시작 루틴 추천, 오늘 운동 부위 추천, 주간 분할 루틴 추천, 목적별 집중 루틴 추천, 회복/스트레칭 루틴 추천
-- `fitness_goal`: 체력 향상, 근비대, 체지방 감량, 근력 향상, 자세 교정/건강 관리
+- `fitness_goal`: 근비대 및 근력 향상, 체지방 감량
 - `experience_level`: 처음 시작, 초급자, 중급자, 상급자
 - `days_per_week`: 2회, 3회, 4회, 5회 이상
 - `workout_place`: 헬스장, 집, 야외, 기구 거의 없음
 - `yesterday_workout`: 운동 안 함, 가슴, 등, 하체, 어깨, 팔, 전신, 유산소
-- `available_time`: 30분 이하, 30-60분, 60-90분, 90분 이상
-- `preference`: 기초부터 천천히, 짧고 효율적으로, 강도 높게, 체계적인 분할 루틴, 유산소와 근력 병행
 
 ## FastAPI 응답 JSON 예시
 
@@ -62,9 +60,9 @@ Streamlit은 추천을 직접 계산하지 않고 `/recommend` API에 요청을 
     "selected_exercise_pool": "gym_hypertrophy_pull",
     "selected_today_focus": "등 중심",
     "place_rule": "헬스장 환경에 맞는 운동 풀 사용",
-    "goal_rule": "부위별 볼륨과 8-12회 반복 중심",
+    "goal_rule": "근육량 증가와 힘 향상을 함께 노리는 근력 중심 구성",
     "level_rule": "점진적 과부하와 부위별 볼륨 관리",
-    "time_rule": "주요 운동과 보조 운동을 함께 포함"
+    "days_rule": "주 4회 기준 주간 계획 생성"
   }
 }
 ```
