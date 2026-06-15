@@ -1,77 +1,102 @@
-﻿# 데이터사이언스 학습 로드맵 추천 앱
+# 여름방학 맞춤 운동 루틴 추천 앱
 
-Streamlit 프론트엔드와 FastAPI 백엔드를 Docker Compose로 연결한 추천 웹 애플리케이션입니다. 사용자가 관심 분야, 학년, 선호 난이도, 학습 시간, 목표를 입력하면 FastAPI가 규칙 기반 추천 결과를 JSON으로 반환하고 Streamlit이 화면에 표시합니다.
+Streamlit 프론트엔드와 FastAPI 백엔드를 Docker Compose로 연결한 운동 루틴 추천 웹 애플리케이션입니다. 사용자가 운동 목적, 경험 수준, 운동 가능 횟수, 운동 장소, 어제 운동한 부위, 운동 가능 시간, 선호 운동 방식을 입력하면 FastAPI가 규칙 기반으로 오늘의 운동 루틴과 주간 계획을 JSON으로 반환하고 Streamlit이 화면에 표시합니다.
+
+이 앱은 일반적인 운동 루틴 추천을 제공하는 학습용 웹앱이며, 의학적 진단이나 치료 목적이 아닙니다. 통증, 질환, 부상 이력이 있는 경우 전문가와 상담해야 합니다.
+
+## 기술 스택
+
+- Frontend: Streamlit
+- Backend: FastAPI, Pydantic
+- HTTP Client: requests
+- Container: Docker, Docker Compose
+- Deployment target: AWS EC2
 
 ## 프로젝트 구조
 
 ```text
 ds-roadmap-recommender/
 ├─ back/
-│  ├─ main.py              # FastAPI 앱과 /recommend API
-│  ├─ model.py             # 요청/응답 Pydantic 모델
-│  ├─ recommender.py       # 추천 로직
+│  ├─ main.py
+│  ├─ model.py
+│  ├─ recommender.py
 │  ├─ requirements.txt
 │  └─ Dockerfile
 ├─ front/
-│  ├─ app.py               # Streamlit 화면과 FastAPI 호출
+│  ├─ app.py
 │  ├─ requirements.txt
 │  └─ Dockerfile
 ├─ docker-compose.yml
-├─ .gitignore
 └─ README.md
 ```
 
-## 주요 기능
+## 입력값 설명
 
-- Streamlit에서 사용자 입력 받기
-- `requests.post()`로 FastAPI `/recommend` 엔드포인트 호출
-- FastAPI에서 입력값을 바탕으로 추천 유형, 기술, 프로젝트, 학습 계획 생성
-- 추천 결과를 JSON으로 반환
-- Docker Compose로 프론트엔드와 백엔드를 각각 다른 컨테이너로 실행
+- `fitness_goal`: 체력 향상, 근비대, 체지방 감량, 근력 향상, 자세 교정/건강 관리
+- `experience_level`: 처음 시작, 초급자, 중급자, 상급자
+- `days_per_week`: 2회, 3회, 4회, 5회 이상
+- `workout_place`: 헬스장, 집, 야외, 기구 거의 없음
+- `yesterday_workout`: 운동 안 함, 가슴, 등, 하체, 어깨, 팔, 전신, 유산소
+- `available_time`: 30분 이하, 30~60분, 60~90분, 90분 이상
+- `preference`: 기초부터 천천히, 짧고 효율적으로, 강도 높게, 체계적인 분할 루틴, 유산소와 근력 병행
+
+## FastAPI 응답 JSON 예시
+
+```json
+{
+  "user_type": "초급자을 위한 전신 루틴 추천형",
+  "routine_type": "전신 3회 루틴",
+  "main_recommendation": "운동 목적과 경험 수준, 장소, 운동 시간을 반영한 추천 설명입니다.",
+  "today_focus": "오늘 추천 부위는 상체 또는 가벼운 유산소입니다.",
+  "recommended_exercises": [
+    {
+      "name": "맨몸 스쿼트",
+      "sets": "3세트",
+      "reps": "8~12회",
+      "rest": "60~90초",
+      "description": "전신 활동량과 기본 체력을 함께 높이는 데 도움이 되는 운동입니다."
+    }
+  ],
+  "weekly_plan": [
+    "1일차: 전신 근력 또는 Push",
+    "2일차: Pull 또는 전신 보완",
+    "3일차: Legs + 코어 또는 가벼운 유산소"
+  ],
+  "intensity_guide": "RPE 기준으로 무리하지 않는 강도를 안내합니다.",
+  "recovery_tip": "어제 운동한 부위와 오늘 운동 부위를 고려한 회복 팁입니다.",
+  "caution": "일반적인 운동 안내이며 통증이나 부상 이력이 있으면 전문가와 상담해야 합니다."
+}
+```
 
 ## 로컬 실행 방법
 
 ```bash
+docker compose down
 docker compose up --build
 ```
 
 실행 후 브라우저에서 접속합니다.
 
 - Streamlit: http://localhost:8501
-- FastAPI 문서: http://localhost:8000/docs
+- FastAPI docs: http://localhost:8000/docs
 
 ## EC2 실행 방법
 
-1. EC2 인스턴스에 Docker와 Docker Compose를 설치합니다.
-2. GitHub 저장소를 clone합니다.
-3. 프로젝트 폴더로 이동합니다.
-4. 다음 명령어를 실행합니다.
-
 ```bash
+git clone https://github.com/IMHOGYUN/ds-roadmap-recommender.git
+cd ds-roadmap-recommender
 docker compose up --build -d
-```
-
-5. 실행 상태를 확인합니다.
-
-```bash
 docker ps
 ```
 
-6. EC2 보안 그룹 인바운드 규칙에서 Streamlit 접속용 `8501` 포트를 허용합니다.
-7. 브라우저에서 아래 주소로 접속합니다.
+AWS EC2 보안 그룹 인바운드 규칙에서 Streamlit 접속용 `8501` 포트를 허용한 뒤 접속합니다.
 
 ```text
 http://EC2_PUBLIC_IP:8501
 ```
 
-FastAPI는 Docker 내부 네트워크에서 `http://backend:8000` 주소로 Streamlit과 연결됩니다. 외부에서 API 문서까지 확인하려면 보안 그룹에서 `8000` 포트도 허용한 뒤 `http://EC2_PUBLIC_IP:8000/docs`로 접속할 수 있습니다.
+FastAPI 문서를 외부에서 확인하려면 `8000` 포트도 허용한 뒤 접속합니다.
 
-## 데모 영상 체크리스트
-
-- EC2 public 주소로 Streamlit 앱 접속
-- 입력 항목 선택
-- `추천 받기` 버튼 클릭
-- 추천 결과 표시 확인
-- `FastAPI에서 받은 원본 JSON 보기` expander로 API 응답 확인
-- EC2 터미널에서 `docker ps` 실행 상태 확인
-- 필요하면 FastAPI 문서 `/docs` 또는 로그로 백엔드 연결 확인
+```text
+http://EC2_PUBLIC_IP:8000/docs
+```
