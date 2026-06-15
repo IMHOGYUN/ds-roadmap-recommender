@@ -90,7 +90,7 @@ if st.button("운동 루틴 추천 받기", type="primary"):
             st.write(result["routine_type"])
 
             st.subheader("핵심 추천")
-            st.write(result["main_recommendation"])
+            st.info(result["main_recommendation"])
 
             st.subheader("오늘 추천 운동 부위")
             st.write(result["today_focus"])
@@ -98,15 +98,15 @@ if st.button("운동 루틴 추천 받기", type="primary"):
             st.subheader("오늘의 운동 루틴")
             for exercise in result["recommended_exercises"]:
                 with st.container(border=True):
-                    st.markdown(f"**{exercise['name']}**")
-                    st.write(
-                        f"{exercise['sets']} · {exercise['reps']} · 휴식 {exercise['rest']}"
-                    )
+                    st.subheader(exercise["name"])
+                    st.write(f"세트: {exercise['sets']}")
+                    st.write(f"반복: {exercise['reps']}")
+                    st.write(f"휴식: {exercise['rest']}")
                     st.caption(exercise["description"])
 
             st.subheader("주간 운동 계획")
-            for plan in result["weekly_plan"]:
-                st.write(f"- {plan}")
+            for idx, plan in enumerate(result["weekly_plan"], start=1):
+                st.write(f"{idx}. {plan}")
 
             st.subheader("강도 조절 가이드")
             st.write(result["intensity_guide"])
@@ -116,6 +116,9 @@ if st.button("운동 루틴 추천 받기", type="primary"):
 
             st.subheader("주의사항")
             st.warning(result["caution"])
+
+            with st.expander("전송한 입력값 보기"):
+                st.json(payload)
 
             with st.expander("FastAPI에서 받은 원본 JSON 보기"):
                 st.json(result)

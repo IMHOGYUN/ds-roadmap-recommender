@@ -29,3 +29,4 @@ class RecommendResponse(BaseModel):
     intensity_guide: str
     recovery_tip: str
     caution: str
+    debug_info: dict[str, str]

@@ -2,6 +2,8 @@
 
 Streamlit 프론트엔드와 FastAPI 백엔드를 Docker Compose로 연결한 운동 루틴 추천 웹 애플리케이션입니다. 사용자가 운동 목적, 경험 수준, 운동 가능 횟수, 운동 장소, 어제 운동한 부위, 운동 가능 시간, 선호 운동 방식을 입력하면 FastAPI가 규칙 기반으로 오늘의 운동 루틴과 주간 계획을 JSON으로 반환하고 Streamlit이 화면에 표시합니다.
 
+추천 로직은 입력 조합에 따라 운동 풀을 다르게 선택합니다. 예를 들어 집에서 처음 시작하는 사용자는 맨몸 전신 루틴을 받고, 헬스장에서 근비대를 목표로 하는 중급자는 등/하체 중심 분할 루틴을 받으며, 어제 전신을 운동한 사용자는 회복 루틴을 우선 추천받습니다.
+
 이 앱은 일반적인 운동 루틴 추천을 제공하는 학습용 웹앱이며, 의학적 진단이나 치료 목적이 아닙니다. 통증, 질환, 부상 이력이 있는 경우 전문가와 상담해야 합니다.
 
 ## 기술 스택
@@ -64,7 +66,18 @@ ds-roadmap-recommender/
   ],
   "intensity_guide": "RPE 기준으로 무리하지 않는 강도를 안내합니다.",
   "recovery_tip": "어제 운동한 부위와 오늘 운동 부위를 고려한 회복 팁입니다.",
-  "caution": "일반적인 운동 안내이며 통증이나 부상 이력이 있으면 전문가와 상담해야 합니다."
+  "caution": "일반적인 운동 안내이며 통증이나 부상 이력이 있으면 전문가와 상담해야 합니다.",
+  "debug_info": {
+    "selected_goal": "체력 향상",
+    "selected_experience": "초급자",
+    "selected_days": "3회",
+    "selected_place": "집",
+    "selected_yesterday": "운동 안 함",
+    "selected_time": "30~60분",
+    "selected_preference": "기초부터 천천히",
+    "selected_exercise_pool": "beginner_fullbody",
+    "selected_today_focus": "정상 루틴"
+  }
 }
 ```
 
