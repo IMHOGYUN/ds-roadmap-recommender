@@ -78,6 +78,13 @@ EXERCISE_POOLS = {
         ("시티드 로우", "등 중앙부와 자세 안정성을 함께 훈련합니다."),
         ("트레드밀 걷기", "부담 낮은 유산소로 운동 습관을 만듭니다."),
     ],
+    "novice_pattern_strength": [
+        ("고블릿 스쿼트", "가벼운 중량으로 스쿼트 패턴을 익힙니다."),
+        ("인클라인 푸시업", "상체 밀기 동작을 쉬운 각도로 연습합니다."),
+        ("밴드 로우", "등 당기기 패턴을 반복하기 좋은 운동입니다."),
+        ("덤벨 루마니안 데드리프트", "힙힌지 동작을 안전하게 익힙니다."),
+        ("데드버그", "허리 부담이 적은 코어 안정화 운동입니다."),
+    ],
     "intermediate_strength_split": [
         ("벤치프레스", "상체 밀기 근력과 가슴 볼륨을 확보합니다."),
         ("랫풀다운", "등 너비와 당기기 힘을 강화합니다."),
@@ -123,6 +130,13 @@ EXERCISE_POOLS = {
         ("고관절 스트레칭", "골반과 하체 가동성을 회복합니다."),
         ("복식호흡", "운동 강도를 낮추고 회복을 돕습니다."),
     ],
+    "today_upper_recovery": [
+        ("인클라인 푸시업", "하체 피로가 있을 때 상체를 가볍게 자극합니다."),
+        ("밴드 로우 또는 수건 로우", "장소 제약을 줄인 상체 당기기 운동입니다."),
+        ("데드버그", "하체 부담 없이 코어를 안정화합니다."),
+        ("사이드 플랭크", "측면 코어와 몸통 안정성을 기릅니다."),
+        ("가벼운 걷기", "하체 피로를 확인하며 회복을 돕습니다."),
+    ],
 }
 
 
@@ -149,7 +163,16 @@ def get_today_focus(yesterday_workout, experience_level):
 
 
 def get_routine_type(data):
-    if data.recommendation_mode == "회복/스트레칭 루틴 추천" or data.yesterday_workout == "전신":
+    if data.recommendation_mode == "회복/스트레칭 루틴 추천":
+        return "회복 및 가동성 루틴"
+    if data.recommendation_mode == "처음 시작 루틴 추천":
+        return "운동 습관 형성 전신 루틴"
+    if data.recommendation_mode == "오늘 운동 부위 추천":
+        focus, _ = get_today_focus(data.yesterday_workout, data.experience_level)
+        return f"어제 운동을 고려한 {focus} 루틴"
+    if data.recommendation_mode == "목적별 집중 루틴 추천":
+        return "근력 집중 루틴" if data.fitness_goal == "근비대 및 근력 향상" else "체지방 감량 순환 루틴"
+    if data.yesterday_workout == "전신":
         return "회복 및 가동성 루틴"
     if data.experience_level == "처음 시작":
         return "전신 기초 루틴"
@@ -163,6 +186,13 @@ def get_routine_type(data):
 
 
 def get_weekly_plan(data):
+    if data.recommendation_mode == "회복/스트레칭 루틴 추천":
+        return [
+            "1일차: 가벼운 걷기와 전신 스트레칭",
+            "2일차: 코어 안정화와 가동성 운동",
+            "3일차: 피로가 적으면 짧은 전신 루틴, 피로가 크면 휴식",
+            "나머지 날: 수면, 수분 섭취, 가벼운 산책으로 회복",
+        ]
     if data.experience_level == "처음 시작":
         return [
             "1일차: 전신 기초 동작과 가벼운 유산소",
@@ -198,14 +228,27 @@ def get_weekly_plan(data):
 def select_pool(data, today_focus):
     if data.recommendation_mode == "회복/스트레칭 루틴 추천" or today_focus == "회복 루틴":
         return "recovery"
+    if data.recommendation_mode == "처음 시작 루틴 추천":
+        if data.workout_place == "헬스장":
+            return "beginner_gym_strength"
+        return "beginner_home_strength"
+    if data.recommendation_mode == "오늘 운동 부위 추천":
+        if today_focus == "상체/코어 중심":
+            return "today_upper_recovery"
+        if "등" in today_focus and data.workout_place == "헬스장":
+            return "intermediate_strength_split" if data.experience_level in ["중급자", "상급자"] else "beginner_gym_strength"
+        if "하체" in today_focus and data.workout_place == "헬스장":
+            return "intermediate_strength_split"
     if data.fitness_goal == "체지방 감량":
         if data.workout_place == "야외":
             return "outdoor_fat_loss"
         if data.workout_place == "헬스장":
             return "gym_fat_loss"
         return "home_fat_loss"
-    if data.experience_level in ["처음 시작", "초급자"]:
+    if data.experience_level == "처음 시작":
         return "beginner_gym_strength" if data.workout_place == "헬스장" else "beginner_home_strength"
+    if data.experience_level == "초급자":
+        return "novice_pattern_strength" if data.workout_place != "헬스장" else "beginner_gym_strength"
     if data.experience_level == "중급자":
         return "intermediate_strength_split"
     return "advanced_strength_split"
@@ -262,9 +305,24 @@ def recommend(data):
         f"{level['rule']}에 맞는 운동 풀을 선택했습니다."
     )
 
+    mode_summary = {
+        "처음 시작 루틴 추천": "처음 시작 모드라서 쉬운 전신 운동과 낮은 강도를 우선했습니다.",
+        "오늘 운동 부위 추천": f"어제 '{data.yesterday_workout}' 운동을 반영해 오늘은 {today_focus}으로 조정했습니다.",
+        "주간 분할 루틴 추천": f"주 {data.days_per_week}와 경험 수준 '{data.experience_level}'에 맞춰 분할 계획을 만들었습니다.",
+        "목적별 집중 루틴 추천": f"운동 목적 '{data.fitness_goal}'에 맞춰 운동 종류와 반복 방식을 선택했습니다.",
+        "회복/스트레칭 루틴 추천": "회복 모드라서 강한 근력 운동보다 가동성, 스트레칭, 낮은 강도를 우선했습니다.",
+    }.get(data.recommendation_mode, "입력 조건을 바탕으로 맞춤 루틴을 구성했습니다.")
+
+    experience_highlight = (
+        f"{level['label']} 단계이므로 '{level['routine_suffix']}'으로 분류했습니다. "
+        f"운동 수는 최대 {level['count']}개, 세트는 {level['sets']}, 강도는 {level['rpe']} 기준입니다."
+    )
+
     result = {
         "user_type": f"{level['label']} {goal['label']} {level['routine_suffix']} 루틴",
         "routine_type": routine_type,
+        "mode_summary": mode_summary,
+        "experience_highlight": experience_highlight,
         "main_recommendation": main,
         "today_focus": f"오늘 추천 방향: {today_focus}. {today_reason}",
         "recommended_exercises": build_exercises(data, pool_name),

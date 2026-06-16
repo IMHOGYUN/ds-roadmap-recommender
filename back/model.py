@@ -33,6 +33,8 @@ class DebugInfo(BaseModel):
 class RecommendResponse(BaseModel):
     user_type: str
     routine_type: str
+    mode_summary: str
+    experience_highlight: str
     main_recommendation: str
     today_focus: str
     recommended_exercises: list[Exercise]

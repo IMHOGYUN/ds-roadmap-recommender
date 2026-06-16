@@ -82,6 +82,10 @@ if st.button("운동 루틴 추천 받기", type="primary"):
             st.subheader("추천 루틴 방식")
             st.write(result["routine_type"])
 
+            st.subheader("선택 조건 분석")
+            st.success(result["mode_summary"])
+            st.info(result["experience_highlight"])
+
             st.subheader("핵심 추천")
             st.info(result["main_recommendation"])
 

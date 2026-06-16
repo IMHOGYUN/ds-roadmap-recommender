@@ -37,6 +37,8 @@ Streamlit은 추천을 직접 계산하지 않고 `/recommend` API에 요청을 
 {
   "user_type": "중급자 오늘 부위 조절 루틴형",
   "routine_type": "오늘 등 중심 루틴",
+  "mode_summary": "어제 가슴 운동을 반영해 오늘은 등 중심으로 조정했습니다.",
+  "experience_highlight": "중급자 단계이므로 분할 볼륨 관리형으로 분류했습니다.",
   "main_recommendation": "오늘 운동 부위 추천 모드에서는 어제 운동한 부위인 가슴을 가장 중요하게 봅니다.",
   "today_focus": "오늘 추천 방향: 등 중심. 어제 가슴을 운동했으므로 오늘은 등 중심으로 균형을 맞춥니다.",
   "recommended_exercises": [
